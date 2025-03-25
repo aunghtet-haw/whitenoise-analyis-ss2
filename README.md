@@ -26,7 +26,7 @@ This MATLAB project generates, analyzes, and visualizes a **band-limited Gaussia
    ```
 2. Open MATLAB and run the script:
    ```matlab
-   main.m
+    	whitenoiseanalysis.m
    ```
 
 ## **Generated Plots**
