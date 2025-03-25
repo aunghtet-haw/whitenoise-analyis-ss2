@@ -160,3 +160,126 @@ semilogx(f,10*log10(psd_x),'b');
 xlabel('frequency $f$ in Hz'); ylabel('$10\cdot \log_{10}\big(S_{yy}(f)\big)$ in dB/Hz');
 title('Output signal power density spectrum')
 grid on;
+
+%RLC
+% definition of the system parameters
+R  = 1;           % resistance
+C  = 0.01;        % capacitance
+L  = 0.100;       % inductance
+tau = R*C;        % constant 1
+wr = 1/sqrt(L*C); % constant 2
+
+% declaration of the continuous-time system
+A2 = [0 -wr^2; 1 -tau*wr^2];
+b2 = [1; 0];
+c2 = [0 wr^2];
+d2 = 0;
+sys = ss(A2,b2,c2,d2);
+
+figure(7);clf; % open / clear plot window
+
+% frequency response of RLC resonant circuit as known 
+% from Signals and Systems 1 lecture
+s = j*2*pi*f; H = 1./(1+s*tau+s.^2/wr^2);
+subplot(2,1,1);
+semilogx(f,20*log10(abs(H)), 'm-')
+ylabel({'amplitude response';'$|H(f)|$ in dB'});
+title('\textbf{Theoretical frequency response of $RLC$ resonant filter}','fontsize',12);
+subtitle(strcat('$R=\,$', num2str(R), ', $L=\,$', num2str(L), ', $C=\,$', num2str(C)));
+grid on;
+subplot(2,1,2)
+semilogx(f,rad2deg(angle(H)), 'm-')
+xlabel('frequency $f$ in Hz'); ylabel({'phase response';['$\varphi\big(H(f)\big)$ in $^\circ$']})
+grid on;
+
+% alternatively: use MATLAB bode command
+figure(8); clf;
+bode(sys);
+
+figure(9); clf; % open / clear plot window
+sys_d = c2d(sys,T_s);
+%impulse(sys, sys_d);
+step(sys,sys_d);
+legend('continuous','discrete')
+
+y = lsim(sys_d,x,t); % calculate output of sys_d for given input
+figure(10); clf;      % open / clear plot window
+plot(t,y,'rx');
+xlabel('time $n\cdot T_s$ in s'); ylabel('output samples $y[n]$');
+title(strcat('Output signal: $RLC$ filtered with $R=\,$', num2str(R), ', $L=\,$', num2str(L), ', $C=\,$', num2str(C)));
+subtitle(strcat('constants $\tau=RC=\,$', num2str(tau,3), ', $\omega_r=\frac{1}{\sqrt{LC}}=\,$', num2str(wr,3)));
+
+figure(11); clf; % open / clear plot window
+histogram(y,'FaceColor','r'); 
+xlabel('amplitude value $y$'); ylabel('number of values');
+mean_y = mean(y);   % average value (offset)
+sigma_y = std(y,1); % standard deviation
+sigma_y_theo=sigma_x*sqrt(T_s/(2*tau)); % theoretical standard deviation
+title("Distribution of output values")
+subtitle(strcat('$E(Y)=\,$', num2str(mean_y,3), ...
+    ' (theory:\,',num2str(mean_x,3),'), $\sigma(Y)=\,$', num2str(sigma_y,3), ...
+    ' (theory:\,',num2str(sigma_y_theo,3), ')'));
+grid on;
+
+figure(12); clf;        % open / clear plot window
+[r_yy,lags] = xcorr(y); % autocorrelation estimate
+r_yy = r_yy/N;          % 'biased' normalization by length of signal
+plot(lags*T_s,r_yy,'r');
+xlabel('lag time $k\cdot T_s$ in s'); ylabel('$r_{yy}[k]$');
+title('Output signal autocorrelation')
+grid on; % xlim([-50,50]);
+
+figure(13); clf; % open / clear plot window
+[psd_y,f] = pwelch(y,[],[],N_win,f_s,'psd');
+semilogx(f,10*log10(psd_y),'r'); 
+xlabel('frequency $f$ in Hz'); ylabel('$10\cdot \log_{10}\big(S_{yy}(f)\big)$ in dB/Hz units');
+title('Output signal power density spectrum')
+grid on;
+
+% Calculate the amplitude response estimate from power density spectra
+amplitude_response_estimated = sqrt(psd_y ./ psd_x);
+
+% Plot the amplitude response
+figure(14); clf; % open / clear plot window
+semilogx(f, 20 * log10(amplitude_response_estimated), 'k', 'DisplayName', 'experimental'); % black for experimental
+hold on;
+semilogx(f, 20 * log10(abs(H)), 'm-', 'DisplayName', 'theoretical'); % magenta for theoretical
+xlabel('frequency $f$ in Hz', 'Interpreter', 'latex');
+ylabel('$20 \cdot \log_{10} \left(\sqrt{\frac{S_{yy}(f)}{S_{xx}(f)}} \right)$', 'Interpreter', 'latex');
+title('Amplitude response from auto power density spectrum', 'Interpreter', 'latex');
+legend('show', 'Location', 'best');
+grid on;
+
+% Compute cross power spectral density using cpsd()
+[pxy, f] = cpsd(y, x, [], [], [], f_s); % Cross-power spectral density between input and output
+[psd_x, f] = pwelch(x, [], [], N_win, f_s); % Power spectral density of input
+[psd_y, f] = pwelch(y, [], [], N_win, f_s); % Power spectral density of output
+
+% Calculate amplitude response (magnitude of transfer function)
+amplitude_response = abs(pxy) ./ psd_x; % H(f) magnitude
+
+% Calculate phase response (angle of transfer function)
+phase_response = unwrap(angle(pxy)); % H(f) phase in radians
+
+% Plot the amplitude response
+figure(15); clf; % open/clear plot window
+subplot(2, 1, 1);
+semilogx(f, 20 * log10(amplitude_response), 'k', 'DisplayName', 'Experimental');
+hold on;
+semilogx(f, 20 * log10(abs(H)), 'm-', 'DisplayName', 'Theoretical');
+xlabel('Frequency $f$ [Hz]', 'Interpreter', 'latex');
+ylabel('Amplitude Response $|H(f)|$ [dB]', 'Interpreter', 'latex');
+title('Amplitude Response (Experimental vs. Theoretical)', 'Interpreter', 'latex');
+legend('show', 'Location', 'best');
+grid on;
+
+% Plot the phase response
+subplot(2, 1, 2);
+semilogx(f, rad2deg(phase_response), 'k', 'DisplayName', 'Experimental');
+hold on;
+semilogx(f, rad2deg(angle(H)), 'm-', 'DisplayName', 'Theoretical');
+xlabel('Frequency $f$ [Hz]', 'Interpreter', 'latex');
+ylabel('Phase Response $\phi(H(f))$ [degrees]', 'Interpreter', 'latex');
+title('Phase Response (Experimental vs. Theoretical)', 'Interpreter', 'latex');
+legend('show', 'Location', 'best');
+grid on;
