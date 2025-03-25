@@ -1,6 +1,6 @@
 # Band-Limited White Noise Analysis and RLC Circuit Simulation
 
-This MATLAB project performs analysis on band-limited white noise, including signal generation, statistical analysis, power spectral density estimation, and system response through an RLC circuit filter. The project also compares theoretical and experimental results.
+This MATLAB project as a part of Signal and System 2 course at HAW HH performs analysis on band-limited white noise, including signal generation, statistical analysis, power spectral density estimation, and system response through an RLC circuit filter. The project also compares theoretical and experimental results.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -31,18 +31,18 @@ This project generates a Gaussian white noise signal and analyzes its properties
 1. Ensure you have MATLAB installed on your system.
 2. Clone this repository:
    ```sh
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/aunghtet-haw/whitenoise-analyis-ss2.git
    ```
 3. Navigate to the project directory:
    ```sh
-   cd your-repo-name
+   cd whitenoise-analyis-ss2
    ```
 
 ## Usage
 1. Open MATLAB and navigate to the project directory.
 2. Run the main script:
    ```matlab
-   main_script.m
+    whitenoise-analyis-ss2.m
    ```
 3. The script will generate plots and numerical outputs related to noise analysis and system response.
 4. Modify parameters such as noise variance, sampling rate, and RLC values to observe different effects.
