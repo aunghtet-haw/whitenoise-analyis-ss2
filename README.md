@@ -1,42 +1,63 @@
-# whitenoise-analyis-ss2
-# **Band-Limited White Noise Analysis in MATLAB**
+# Band-Limited White Noise Analysis and RLC Circuit Simulation
 
-This MATLAB project generates, analyzes, and visualizes a **band-limited Gaussian white noise** signal. It demonstrates fundamental signal processing techniques, including power spectral estimation, autocorrelation, and power density spectrum analysis.
+This MATLAB project performs analysis on band-limited white noise, including signal generation, statistical analysis, power spectral density estimation, and system response through an RLC circuit filter. The project also compares theoretical and experimental results.
 
-## **Features**
-- **White Noise Generation**: Creates a Gaussian white noise signal with configurable mean and standard deviation.
-- **Time-Domain Analysis**: Plots the noise signal and its statistical distribution.
-- **Autocorrelation Estimation**: Computes and visualizes the autocorrelation function.
-- **Power Spectrum Analysis**: Implements three methods for spectral estimation:
-  1. **DFT of the autocorrelation function**
-  2. **DFT of the signal**
-  3. **MATLAB’s `pwelch()` function**
-- **Power Calculation**: Compares different approaches to estimating the mean power of the signal.
-- **Power Spectral Density (PSD)**: Uses `pwelch()` with different windowing techniques for spectral density estimation.
+## Table of Contents
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Results](#results)
+- [License](#license)
 
-## **Installation & Usage**
-### **Requirements**
-- MATLAB (Tested on R2021a and later)
+## Overview
+This project generates a Gaussian white noise signal and analyzes its properties in both time and frequency domains. It then applies an RLC filter to the signal and compares the theoretical response with the experimental response obtained via simulation.
 
-### **Run the Script**
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/aunghtet-haw/whitenoise-analyis-ss2.git
-   cd whitenoise-analyis-ss2
+## Features
+- Generation of band-limited Gaussian white noise
+- Time-domain visualization and histogram analysis
+- Autocorrelation estimation
+- Power spectral density (PSD) computation using different methods:
+  - Direct Fourier Transform (DFT) of the autocorrelation function
+  - FFT-based spectrum estimation
+  - MATLAB's `pwelch()` function
+- Analysis of the RLC circuit as a system:
+  - Theoretical frequency response of the RLC circuit
+  - Bode plot of the system
+  - Simulation of discrete-time system response
+- Comparison of theoretical and experimental system responses
+
+## Installation
+1. Ensure you have MATLAB installed on your system.
+2. Clone this repository:
+   ```sh
+   git clone https://github.com/yourusername/your-repo-name.git
    ```
-2. Open MATLAB and run the script:
+3. Navigate to the project directory:
+   ```sh
+   cd your-repo-name
+   ```
+
+## Usage
+1. Open MATLAB and navigate to the project directory.
+2. Run the main script:
    ```matlab
-    	whitenoiseanalysis.m
+   main_script.m
    ```
+3. The script will generate plots and numerical outputs related to noise analysis and system response.
+4. Modify parameters such as noise variance, sampling rate, and RLC values to observe different effects.
 
-## **Generated Plots**
-The script generates multiple plots, including:
-- **White noise time-domain representation**
-- **Histogram of sample values**
-- **Autocorrelation function**
-- **Power spectrum estimates using different methods**
-- **Power spectral density with different windowing techniques**
+## Results
+This project generates various plots, including:
+- Input signal time-domain waveform
+- Histogram of input values
+- Power spectral density using different methods
+- Theoretical and experimental amplitude and phase responses of the RLC circuit
+- Autocorrelation functions
+- Comparison of system response with theoretical expectations
 
-## **License**
-This project is open-source under the MIT License. Feel free to use and modify it for research or educational purposes.
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.
 
+---
+Feel free to contribute by submitting issues or pull requests!
